@@ -1,6 +1,7 @@
 import pygame
 import numpy as np
 
+from inputModel import InputModel
 from buttons import Button
 from constants import *
 
@@ -55,6 +56,7 @@ def main():
     global grid
     drawing = False
     clock = pygame.time.Clock()
+    input_field = InputModel(screen=screen, x=3*width/8, y=7.4*height/8, w=2*width/8, h=height / 16, text_color=None, box_color=None)
     next_button = Button(screen=screen, color=WHITE, x=6*width/9, y=7*height/8, tipe="next", radius=30)
     prev_button = Button(screen=screen, color=WHITE, x=3*width/9, y=7*height/8, tipe="previous", radius=30)
     stop_button = Button(screen=screen, color=WHITE, x=4*width/9, y=7*height/8, tipe="stop", radius=30)
@@ -67,13 +69,14 @@ def main():
                 pygame.quit()
                 quit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:
+                input_field.isPressed(event)
+                if event.button == 1 and event.pos[1] < 6*height/8:
                     x, y = event.pos
                     grid_x, grid_y = x // cell_width, y // cell_height
                     grid[grid_x, grid_y] = 1
                     drawing = True
             elif event.type == pygame.MOUSEMOTION:
-                if drawing:
+                if drawing  and event.pos[1] < 6*height/8:
                     x, y = event.pos
                     grid_x, grid_y = x // cell_width, y // cell_height
                     grid[grid_x, grid_y] = 1
@@ -81,17 +84,13 @@ def main():
                 if event.button == 1:
                     drawing = False
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RETURN:
-                    generations = int(input("Enter the number of generations: "))
-                    for _ in range(generations):
-                        grid = update_grid()
-                        draw_grid()
-                        pygame.time.wait(500)
+                input_field.changeText(event)
 
-        next_button.button()
-        prev_button.button()
-        stop_button.button()
-        play_button.button()
+        input_field.draw()
+        next_button.draw()
+        prev_button.draw()
+        stop_button.draw()
+        play_button.draw()
         draw_grid()
         clock.tick(60)
 

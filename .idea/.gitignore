@@ -3,6 +3,9 @@
 /workspace.xml
 # Editor-based HTTP Client requests
 /httpRequests/
+/.idea/
+/misc.xml
+/GameOfLife.iml
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
