@@ -1,3 +1,5 @@
+import random
+
 import pygame
 import numpy as np
 from pyvidplayer import Video
@@ -11,7 +13,7 @@ screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Conway's Game of Life")
 
 # Set up grid
-cell_width, cell_height = width // n_cols, int(3*height/4) // n_rows
+cell_width, cell_height = width // n_cols, int(3 * height / 4) // n_rows
 grid = np.zeros((n_rows, n_cols))
 
 
@@ -60,7 +62,7 @@ def update_grid():
             cell_neighbors = count_neighbors(x, y)
             in_deadly_zone = is_in_deadly_zone(x, y)
             if grid[x, y] == 1:
-                if in_deadly_zone and (cell_neighbors >= 3 or cell_neighbors< 2):
+                if in_deadly_zone and (cell_neighbors >= 3 or cell_neighbors < 2):
                     print(cell_neighbors)
                     new_grid[x, y] = 0  # Cell dies due to overpopulation in deadly zone
                 elif not in_deadly_zone and (cell_neighbors < 2 or cell_neighbors > 3):
@@ -69,7 +71,6 @@ def update_grid():
                 if cell_neighbors == 3:
                     new_grid[x, y] = 1
     return new_grid
-
 
 
 vid = Video("videos/Intro.mp4")
@@ -119,22 +120,25 @@ def apply_center_gravity(grid):
                     # Check if the target cell is empty and within bounds
                     new_x, new_y = x + move_x, y + move_y
 
-                    if 0 <= new_x < n_rows and 0 <= new_y < n_cols and grid[new_x, new_y] == 0 :
+                    if n_rows > new_x >= 0 == grid[new_x, new_y] and 0 <= new_y < n_cols:
                         # Move cell
                         grid[x, y] = 0
                         grid[new_x, new_y] = 1
 
     return grid
+
+
 def main():
     global grid
     drawing = False
     pause = False
     current_gen = 0
     clock = pygame.time.Clock()
-    input_field = InputModel(screen=screen, x=3*width/8, y=7.4*height/8, w=2*width/8, h=height / 16, text_color=None, box_color=None)
-    next_button = Button(screen=screen, color=WHITE, x=3*width/4, y=7*height/8, tipe="next", radius=30)
-    prev_button = Button(screen=screen, color=WHITE, x=width/4, y=7*height/8, tipe="previous", radius=30)
-    stop_button = Button(screen=screen, color=WHITE, x=width/2, y=7*height/8, tipe="play", radius=30)
+    input_field = InputModel(screen=screen, x=3 * width / 8, y=7.4 * height / 8, w=2 * width / 8, h=height / 16,
+                             text_color=None, box_color=None)
+    next_button = Button(screen=screen, color=WHITE, x=3 * width / 4, y=7 * height / 8, tipe="next", radius=30)
+    prev_button = Button(screen=screen, color=WHITE, x=width / 4, y=7 * height / 8, tipe="previous", radius=30)
+    stop_button = Button(screen=screen, color=WHITE, x=width / 2, y=7 * height / 8, tipe="play", radius=30)
 
     while True:
         screen.fill(BACK)
@@ -154,13 +158,13 @@ def main():
                         grid = update_grid()
                         current_gen += 1
 
-                if event.button == 1 and event.pos[1] < 6*height/8:
+                if event.button == 1 and event.pos[1] < 6 * height / 8:
                     x, y = event.pos
                     grid_x, grid_y = x // cell_width, y // cell_height
                     grid[grid_x, grid_y] = 1
                     drawing = True
             elif event.type == pygame.MOUSEMOTION:
-                if drawing and event.pos[1] < 6*height/8:
+                if drawing and event.pos[1] < 6 * height / 8:
                     x, y = event.pos
                     grid_x, grid_y = x // cell_width, y // cell_height
                     grid[grid_x, grid_y] = 1
