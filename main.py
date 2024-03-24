@@ -32,13 +32,9 @@ def draw_grid():
     for x in range(n_cols):
         for y in range(n_rows):
             if grid[x, y] == 1:
-                pygame.draw.rect(screen, BLACK, (x * cell_width, y * cell_height, cell_width, cell_height))
-            else:
                 pygame.draw.rect(screen, WHITE, (x * cell_width, y * cell_height, cell_width, cell_height))
-        pygame.draw.line(screen, BLACK, (x*cell_width, 0), (x*cell_width, int(3*height/4)))
-
-    for y in range(n_rows+1):
-        pygame.draw.line(screen, BLACK, (0, y * cell_height), (width, y * cell_height))
+            else:
+                pygame.draw.rect(screen, BLACK, (x * cell_width, y * cell_height, cell_width, cell_height))
 
     pygame.display.flip()
 
@@ -70,7 +66,7 @@ def main():
     stop_button = Button(screen=screen, color=WHITE, x=width/2, y=7*height/8, tipe="play", radius=30)
 
     while True:
-        screen.fill(WHITE)
+        screen.fill(BACK)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
