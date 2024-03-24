@@ -96,6 +96,35 @@ def is_in_deadly_zone(x, y):
 
     return (deadly_zone_start_x <= x <= deadly_zone_end_x) and (deadly_zone_start_y <= y <= deadly_zone_end_y)
 
+
+def apply_center_gravity(grid):
+    center_x, center_y = n_rows // 2, n_cols // 2
+
+    if random.random() < 0.3:
+        for x in range(n_rows):
+            for y in range(n_cols):
+                if grid[x, y] == 1:  # Only apply to alive cells
+                    move_x, move_y = 0, 0
+
+                    # Determine the direction to move (towards the center)
+                    if x < center_x - 1:  # Move down if above center
+                        move_x = 1
+                    elif x > center_x:  # Move up if below center
+                        move_x = -1
+
+                    if y < center_y - 1:  # Move right if left of center
+                        move_y = 1
+                    elif y > center_y:  # Move left if right of center
+                        move_y = -1
+                    # Check if the target cell is empty and within bounds
+                    new_x, new_y = x + move_x, y + move_y
+
+                    if 0 <= new_x < n_rows and 0 <= new_y < n_cols and grid[new_x, new_y] == 0 :
+                        # Move cell
+                        grid[x, y] = 0
+                        grid[new_x, new_y] = 1
+
+    return grid
 def main():
     global grid
     drawing = False
@@ -162,4 +191,4 @@ def main():
 
 
 if __name__ == "__main__":
-    intro()
+    main()
