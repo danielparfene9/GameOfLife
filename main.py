@@ -82,6 +82,11 @@ def main():
                     pause = not pause
                     stop_button.switch_button()
 
+                if next_button.isPressed(event.pos[0], event.pos[1]):
+                    if int(input_field.user_text) > current_gen:
+                        grid = update_grid()
+                        current_gen += 1
+
                 if event.button == 1 and event.pos[1] < 6*height/8:
                     x, y = event.pos
                     grid_x, grid_y = x // cell_width, y // cell_height
@@ -99,7 +104,6 @@ def main():
                 input_field.changeText(event)
 
             if pause and len(input_field.user_text) > 0:
-                print(current_gen)
                 if int(input_field.user_text) > current_gen:
                     grid = update_grid()
                     current_gen += 1
