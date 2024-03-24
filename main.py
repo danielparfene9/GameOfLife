@@ -1,21 +1,18 @@
 import pygame
 import numpy as np
 
+from buttons import Button
+from constants import *
+
 # Set up the display
 pygame.init()
-width, height = 1000, 1000
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Conway's Game of Life")
 
-# Define colors
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-RED = (255, 0, 0)
-
 # Set up grid
-n_rows, n_cols = 50, 50
 cell_width, cell_height = width // n_cols, height // n_rows
 grid = np.zeros((n_rows, n_cols))
+
 
 # Function to count neighbors
 def count_neighbors(x, y):
@@ -28,14 +25,15 @@ def count_neighbors(x, y):
                 neighbor_count += grid[neighbor_x, neighbor_y]
     return neighbor_count
 
+
 # Function to draw grid
 def draw_grid():
-    screen.fill(WHITE)
     for x in range(n_cols):
         for y in range(n_rows):
             if grid[x, y] == 1:
                 pygame.draw.rect(screen, BLACK, (x * cell_width, y * cell_height, cell_width, cell_height))
     pygame.display.flip()
+
 
 # Function to update grid based on Conway's rules
 def update_grid():
@@ -51,13 +49,19 @@ def update_grid():
                     new_grid[x, y] = 1
     return new_grid
 
+
 # Main function to run the simulation
 def main():
     global grid
     drawing = False
     clock = pygame.time.Clock()
+    next_button = Button(screen=screen, color=WHITE, x=6*width/9, y=7*height/8, tipe="next", radius=30)
+    prev_button = Button(screen=screen, color=WHITE, x=3*width/9, y=7*height/8, tipe="previous", radius=30)
+    stop_button = Button(screen=screen, color=WHITE, x=4*width/9, y=7*height/8, tipe="stop", radius=30)
+    play_button = Button(screen=screen, color=WHITE, x=5*width/9, y=7*height/8, tipe="play", radius=30)
 
     while True:
+        screen.fill(WHITE)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -82,7 +86,12 @@ def main():
                     for _ in range(generations):
                         grid = update_grid()
                         draw_grid()
-                        pygame.time.wait(100)  # Adjust the speed of the simulation
+                        pygame.time.wait(500)
+
+        next_button.button()
+        prev_button.button()
+        stop_button.button()
+        play_button.button()
         draw_grid()
         clock.tick(60)
 
