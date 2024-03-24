@@ -15,7 +15,7 @@ class Button:
         else:
             self.radius = 10
 
-    def button(self):
+    def draw(self):
         pygame.draw.circle(self.screen, self.color, (self.x, self.y), self.radius)
         pygame.draw.circle(self.screen, (0, 0, 0), (self.x, self.y), self.radius, width=4)
         self.switch(self.tipe)

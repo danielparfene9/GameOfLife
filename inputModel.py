@@ -8,6 +8,7 @@ class InputModel:
         self.screen = screen
         self.text_color = GRAY
         self.box_color = GRAY
+        self.w = w
         self.input_rect = pg.Rect(x, y, w, h)
         self.active = False
         self.base_font = pg.font.Font(None, 32)
@@ -31,20 +32,24 @@ class InputModel:
             self.text_color = GRAY
             self.box_color = GRAY
 
+        self.screen.blit(self.base_font.render("Nr of generation:", True, BLACK), (self.input_rect.x-200, self.input_rect.y+15))
         pg.draw.rect(self.screen, self.box_color, self.input_rect, 2)
         text_surface = self.base_font.render(self.user_text, True, self.text_color)
-        self.screen.blit(text_surface, (self.input_rect.x+5, self.input_rect.y+5))
+        self.screen.blit(text_surface, (self.input_rect.x+5, self.input_rect.y+15))
 
-        self.input_rect.w = max(text_surface.get_width()+10, 100)
+        self.input_rect.w = max(text_surface.get_width()+10, self.w)
 
     def changeText(self, event):
         if self.active:
             if event.key == pygame.K_BACKSPACE:
                 self.user_text = self.user_text[:-1]
-            else:
+            elif event.key in (pygame.K_0, pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4,
+                               pygame.K_5, pygame.K_6, pygame.K_7, pygame.K_8, pygame.K_9):
                 self.user_text += event.unicode
 
     def isPressed(self, event):
         if self.input_rect.collidepoint(event.pos):
             self.active = True
+        else:
+            self.active = False
 
