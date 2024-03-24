@@ -11,7 +11,7 @@ screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Conway's Game of Life")
 
 # Set up grid
-cell_width, cell_height = width // n_cols, height // n_rows
+cell_width, cell_height = width // n_cols, int(3*height/4) // n_rows
 grid = np.zeros((n_rows, n_cols))
 
 
@@ -33,10 +33,16 @@ def draw_grid():
         for y in range(n_rows):
             if grid[x, y] == 1:
                 pygame.draw.rect(screen, BLACK, (x * cell_width, y * cell_height, cell_width, cell_height))
+            else:
+                pygame.draw.rect(screen, WHITE, (x * cell_width, y * cell_height, cell_width, cell_height))
+        pygame.draw.line(screen, BLACK, (x*cell_width, 0), (x*cell_width, int(3*height/4)))
+
+    for y in range(n_rows+1):
+        pygame.draw.line(screen, BLACK, (0, y * cell_height), (width, y * cell_height))
+
     pygame.display.flip()
 
 
-# Function to update grid based on Conway's rules
 def update_grid():
     new_grid = np.copy(grid)
     for x in range(n_cols):
@@ -55,12 +61,13 @@ def update_grid():
 def main():
     global grid
     drawing = False
+    pause = False
+    current_gen = 0
     clock = pygame.time.Clock()
     input_field = InputModel(screen=screen, x=3*width/8, y=7.4*height/8, w=2*width/8, h=height / 16, text_color=None, box_color=None)
-    next_button = Button(screen=screen, color=WHITE, x=6*width/9, y=7*height/8, tipe="next", radius=30)
-    prev_button = Button(screen=screen, color=WHITE, x=3*width/9, y=7*height/8, tipe="previous", radius=30)
-    stop_button = Button(screen=screen, color=WHITE, x=4*width/9, y=7*height/8, tipe="stop", radius=30)
-    play_button = Button(screen=screen, color=WHITE, x=5*width/9, y=7*height/8, tipe="play", radius=30)
+    next_button = Button(screen=screen, color=WHITE, x=3*width/4, y=7*height/8, tipe="next", radius=30)
+    prev_button = Button(screen=screen, color=WHITE, x=width/4, y=7*height/8, tipe="previous", radius=30)
+    stop_button = Button(screen=screen, color=WHITE, x=width/2, y=7*height/8, tipe="play", radius=30)
 
     while True:
         screen.fill(WHITE)
@@ -70,13 +77,18 @@ def main():
                 quit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 input_field.isPressed(event)
+
+                if stop_button.isPressed(event.pos[0], event.pos[1]):
+                    pause = not pause
+                    stop_button.switch_button()
+
                 if event.button == 1 and event.pos[1] < 6*height/8:
                     x, y = event.pos
                     grid_x, grid_y = x // cell_width, y // cell_height
                     grid[grid_x, grid_y] = 1
                     drawing = True
             elif event.type == pygame.MOUSEMOTION:
-                if drawing  and event.pos[1] < 6*height/8:
+                if drawing and event.pos[1] < 6*height/8:
                     x, y = event.pos
                     grid_x, grid_y = x // cell_width, y // cell_height
                     grid[grid_x, grid_y] = 1
@@ -86,12 +98,25 @@ def main():
             elif event.type == pygame.KEYDOWN:
                 input_field.changeText(event)
 
+            if pause and len(input_field.user_text) > 0:
+                print(current_gen)
+                if int(input_field.user_text) > current_gen:
+                    grid = update_grid()
+                    current_gen += 1
+
+                if int(input_field.user_text) == current_gen:
+                    pause = not pause
+                    stop_button.switch_button()
+                    current_gen = 0
+
+        input_field.print_current(str(current_gen))
         input_field.draw()
         next_button.draw()
         prev_button.draw()
         stop_button.draw()
-        play_button.draw()
+
         draw_grid()
+        pygame.time.wait(100)
         clock.tick(60)
 
 

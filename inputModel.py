@@ -1,6 +1,6 @@
 import pygame
 import pygame as pg
-from constants import GRAY, BLACK
+from constants import GRAY, BLACK, height
 
 
 class InputModel:
@@ -53,3 +53,9 @@ class InputModel:
         else:
             self.active = False
 
+    def print_current(self, gen):
+        self.screen.blit(self.base_font.render("Current generation:", True, BLACK),
+                         (self.input_rect.x-240, self.input_rect.y - height/7))
+
+        self.screen.blit(self.base_font.render(gen, True, BLACK),
+                         (self.input_rect.x, self.input_rect.y - height/7))
