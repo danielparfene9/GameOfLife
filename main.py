@@ -36,6 +36,20 @@ def draw_grid():
             else:
                 pygame.draw.rect(screen, BLACK, (x * cell_width, y * cell_height, cell_width, cell_height))
 
+    transparent_surface = pygame.Surface((screen.get_width(), screen.get_height()), pygame.SRCALPHA)
+
+    deadly_zone_start_x = n_cols // 3 * cell_width
+    deadly_zone_end_x = 2 * n_cols // 3 * cell_width
+    deadly_zone_start_y = n_rows // 3 * cell_height
+    deadly_zone_end_y = 2 * n_rows // 3 * cell_height
+    deadly_zone_width = deadly_zone_end_x - deadly_zone_start_x
+    deadly_zone_height = deadly_zone_end_y - deadly_zone_start_y
+
+    pygame.draw.rect(transparent_surface, DEADLY_ZONE_COLOR,
+                     (deadly_zone_start_x, deadly_zone_start_y, deadly_zone_width, deadly_zone_height))
+
+    screen.blit(transparent_surface, (0, 0))
+
     pygame.display.flip()
 
 
@@ -44,13 +58,18 @@ def update_grid():
     for x in range(n_cols):
         for y in range(n_rows):
             cell_neighbors = count_neighbors(x, y)
+            in_deadly_zone = is_in_deadly_zone(x, y)
             if grid[x, y] == 1:
-                if cell_neighbors < 2 or cell_neighbors > 3:
-                    new_grid[x, y] = 0
+                if in_deadly_zone and (cell_neighbors >= 3 or cell_neighbors< 2):
+                    print(cell_neighbors)
+                    new_grid[x, y] = 0  # Cell dies due to overpopulation in deadly zone
+                elif not in_deadly_zone and (cell_neighbors < 2 or cell_neighbors > 3):
+                    new_grid[x, y] = 0  # Regular Game of Life rules
             else:
                 if cell_neighbors == 3:
                     new_grid[x, y] = 1
     return new_grid
+
 
 
 vid = Video("videos/Intro.mp4")
@@ -68,6 +87,15 @@ def intro():
 
 
 # Main function to run the simulation
+
+def is_in_deadly_zone(x, y):
+    deadly_zone_start_x = n_cols // 3
+    deadly_zone_end_x = 2 * n_cols // 3
+    deadly_zone_start_y = n_rows // 3
+    deadly_zone_end_y = 2 * n_rows // 3
+
+    return (deadly_zone_start_x <= x <= deadly_zone_end_x) and (deadly_zone_start_y <= y <= deadly_zone_end_y)
+
 def main():
     global grid
     drawing = False
@@ -130,7 +158,6 @@ def main():
         stop_button.draw()
 
         draw_grid()
-        pygame.time.wait(100)
         clock.tick(60)
 
 
