@@ -1,6 +1,6 @@
 import pygame
 import numpy as np
-
+from pyvidplayer import Video
 from inputModel import InputModel
 from buttons import Button
 from constants import *
@@ -51,6 +51,20 @@ def update_grid():
                 if cell_neighbors == 3:
                     new_grid[x, y] = 1
     return new_grid
+
+
+vid = Video("videos/Intro.mp4")
+vid.set_size((800, 800))
+
+
+def intro():
+    while True:
+        vid.draw(screen, (0, 0))
+        pygame.display.update()
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                vid.close()
+                main()
 
 
 # Main function to run the simulation
@@ -121,4 +135,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    intro()

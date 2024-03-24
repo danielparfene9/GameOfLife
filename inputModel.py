@@ -11,7 +11,7 @@ class InputModel:
         self.w = w
         self.input_rect = pg.Rect(x, y, w, h)
         self.active = False
-        self.base_font = pg.font.Font(None, 32)
+        self.base_font = pg.font.Font('images/Montserrat-Medium.ttf', 20)
         self.user_text = ''
 
         if box_color:
