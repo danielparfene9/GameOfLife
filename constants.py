@@ -10,4 +10,4 @@ DEADLY_ZONE_COLOR = (255, 0, 0, 100)
 
 
 width, height = 800, 800
-n_rows, n_cols = 50, 50
+n_rows, n_cols = 30, 30

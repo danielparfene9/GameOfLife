@@ -14,5 +14,5 @@ class Star:
         self.image_rect = self.image.get_rect(center=(self.x + self.w // 2, self.y + self.h // 2))
 
     def draw(self):
-        # pg.draw.rect(self.screen, self.color, (self.x, self.y, self.w, self.h))
+        pg.draw.rect(self.screen, self.color, (self.x, self.y, self.w, self.h))
         self.screen.blit(self.image, self.image_rect)
