@@ -6,6 +6,7 @@ from pyvidplayer import Video
 from inputModel import InputModel
 from buttons import Button
 from constants import *
+from star import Star
 
 pygame.init()
 screen = pygame.display.set_mode((width, height))
@@ -30,7 +31,9 @@ def draw_grid():
     for x in range(n_cols):
         for y in range(n_rows):
             if grid[x, y] == 1:
-                pygame.draw.rect(screen, WHITE, (x * cell_width, y * cell_height, cell_width, cell_height))
+                star = Star(screen, WHITE, x * cell_width, y * cell_height, cell_width, cell_height)
+                star.draw()
+                # pygame.draw.rect(screen, WHITE, (x * cell_width, y * cell_height, cell_width, cell_height))
             else:
                 pygame.draw.rect(screen, BLACK, (x * cell_width, y * cell_height, cell_width, cell_height))
 
