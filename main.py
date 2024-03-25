@@ -73,22 +73,6 @@ def update_grid():
     return new_grid
 
 
-vid = Video("videos/Intro.mp4")
-vid.set_size((800, 800))
-
-
-def intro():
-    while True:
-        vid.draw(screen, (0, 0))
-        pygame.display.update()
-        for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                vid.close()
-                main()
-
-
-# Main function to run the simulation
-
 def is_in_deadly_zone(x, y):
     deadly_zone_start_x = n_cols // 3
     deadly_zone_end_x = 2 * n_cols // 3
@@ -126,6 +110,20 @@ def apply_center_gravity(grid):
                         grid[new_x, new_y] = 1
 
     return grid
+
+
+vid = Video("videos/Intro.mp4")
+vid.set_size((800, 800))
+
+
+def intro():
+    while True:
+        vid.draw(screen, (0, 0))
+        pygame.display.update()
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                vid.close()
+                main()
 
 
 def main():
@@ -195,4 +193,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    intro()
