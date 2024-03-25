@@ -1,6 +1,7 @@
 import math
 
 import pygame
+from constants import GRAY
 
 
 class Button:

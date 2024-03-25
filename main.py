@@ -7,17 +7,14 @@ from inputModel import InputModel
 from buttons import Button
 from constants import *
 
-# Set up the display
 pygame.init()
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Conway's Game of Life")
 
-# Set up grid
 cell_width, cell_height = width // n_cols, int(3 * height / 4) // n_rows
 grid = np.zeros((n_rows, n_cols))
 
 
-# Function to count neighbors
 def count_neighbors(x, y):
     neighbor_count = 0
     for i in range(-1, 2):
@@ -29,7 +26,6 @@ def count_neighbors(x, y):
     return neighbor_count
 
 
-# Function to draw grid
 def draw_grid():
     for x in range(n_cols):
         for y in range(n_rows):
@@ -63,14 +59,13 @@ def update_grid():
             in_deadly_zone = is_in_deadly_zone(x, y)
             if grid[x, y] == 1:
                 if in_deadly_zone and (cell_neighbors >= 3 or cell_neighbors < 2):
-                    print(cell_neighbors)
                     new_grid[x, y] = 0  # Cell dies due to overpopulation in deadly zone
                 elif not in_deadly_zone and (cell_neighbors < 2 or cell_neighbors > 3):
                     new_grid[x, y] = 0  # Regular Game of Life rules
             else:
                 if cell_neighbors == 3:
                     new_grid[x, y] = 1
-    return new_grid
+    return apply_center_gravity(new_grid)
 
 
 vid = Video("videos/Intro.mp4")
@@ -168,6 +163,18 @@ def main():
                     x, y = event.pos
                     grid_x, grid_y = x // cell_width, y // cell_height
                     grid[grid_x, grid_y] = 1
+                if next_button.isPressed(event.pos[0], event.pos[1]):
+                    next_button.color = GRAY
+                else:
+                    next_button.color = WHITE
+                if prev_button.isPressed(event.pos[0], event.pos[1]):
+                    prev_button.color = GRAY
+                else:
+                    prev_button.color = WHITE
+                if stop_button.isPressed(event.pos[0], event.pos[1]):
+                    stop_button.color = GRAY
+                else:
+                    stop_button.color = WHITE
             elif event.type == pygame.MOUSEBUTTONUP:
                 if event.button == 1:
                     drawing = False
@@ -195,4 +202,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    intro()
